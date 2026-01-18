@@ -31,8 +31,16 @@ function showImage(){
 var autoPlayInterval = null;
 
 function play(){
-	// Останавливаем предварительный показ при первом клике
+	
 	if(t == 0){
+		
+		var audio = document.getElementById("backgroundMusic");
+		if(audio && audio.paused){
+			audio.play().catch(function(error) {
+				console.log("Не удалось запустить музыку:", error);
+			});
+		}
+		
 		if(showImageInterval){
 			clearInterval(showImageInterval);
 			showImageInterval = null;
