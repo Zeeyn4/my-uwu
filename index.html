@@ -8,7 +8,7 @@
 	</head>
 
 	<body style="margin:0px">
-		<audio id="backgroundMusic" loop preload="auto">
+		<audio id="backgroundMusic" autoplay loop preload="auto" playsinline>
 			<source src="music/music.mp3" type="audio/mpeg">
 			Ваш браузер не поддерживает аудио.
 		</audio>
@@ -73,6 +73,38 @@
 				}
 			}
 			preloadImages();
+			
+			// Функция для запуска музыки
+			function tryPlayMusic() {
+				var audio = document.getElementById("backgroundMusic");
+				if (audio && audio.paused) {
+					var playPromise = audio.play();
+					if (playPromise !== undefined) {
+						playPromise.catch(function(error) {
+							// Автозапуск заблокирован - это нормально для Chrome
+							// Музыка запустится при взаимодействии пользователя
+						});
+					}
+				}
+			}
+			
+			// Пытаемся запустить музыку при загрузке страницы
+			window.addEventListener('load', function() {
+				tryPlayMusic();
+			});
+			
+			// Пытаемся запустить музыку при любом взаимодействии пользователя
+			// (это поможет обойти блокировку Chrome)
+			var userInteracted = false;
+			var interactionEvents = ['click', 'touchstart', 'keydown', 'mousedown'];
+			interactionEvents.forEach(function(eventType) {
+				document.addEventListener(eventType, function() {
+					if (!userInteracted) {
+						userInteracted = true;
+						tryPlayMusic();
+					}
+				}, { once: true });
+			});
 		</script>
 		
 		<script type="text/javascript" src="./js/stars.js"></script>
