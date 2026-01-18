@@ -12,6 +12,7 @@ function showImage(){
 		if(imageIndex >= len){
 			imageIndex = 0;
 		}
+		// Изображения уже предзагружены, поэтому сразу устанавливаем src
 		myImage.setAttribute("src", imageArray[imageIndex]);
 		myTxt.innerHTML = txtArray[imageIndex] || "";
 		// Плавное появление нового изображения
@@ -86,7 +87,8 @@ function buttonFadeIn(){
 
 function event(){
 
-	showImageInterval = setInterval(preshowImage, 100);
+	// Увеличиваем интервал для предпоказа - меньше нагрузки на загрузку
+	showImageInterval = setInterval(preshowImage, 500);
 
 	imgInterval = setInterval(function (){
 		if(ok == 3){

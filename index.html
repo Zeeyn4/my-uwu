@@ -62,6 +62,17 @@
 			var txtArray = ["", "", "", "", "", "", "", ""];
 			 var len = imageArray.length;
 			var t = 0;
+			
+			// Предзагрузка всех изображений для быстрой работы
+			var preloadedImages = [];
+			function preloadImages() {
+				for (var i = 0; i < imageArray.length; i++) {
+					var img = new Image();
+					img.src = imageArray[i];
+					preloadedImages.push(img);
+				}
+			}
+			preloadImages();
 		</script>
 		
 		<script type="text/javascript" src="./js/stars.js"></script>
