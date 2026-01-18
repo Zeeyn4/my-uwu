@@ -4,41 +4,69 @@ btn.style.opacity = 0;
 var btnVal = 0;
 
 function showImage(){
-	//document.getElementById("imgTxt").style.opacity = 0;
-	myImage.setAttribute("src", imageArray[imageIndex]);
-	myTxt.innerHTML = txtArray[imageIndex];
-	//document.getElementById("imgTxt").style.opacity = 1 - flag;
-	imageIndex++;
-	if(imageIndex >= len){
-		imageIndex = 0;
-	}
+	// Плавное исчезновение изображения
+	myImage.style.opacity = '0';
+	
+	setTimeout(function(){
+		// Убеждаемся, что индекс в допустимых пределах
+		if(imageIndex >= len){
+			imageIndex = 0;
+		}
+		myImage.setAttribute("src", imageArray[imageIndex]);
+		myTxt.innerHTML = txtArray[imageIndex] || "";
+		// Плавное появление нового изображения
+		setTimeout(function(){
+			myImage.style.opacity = '1';
+		}, 50);
+		
+		// Увеличиваем индекс только после установки изображения
+		imageIndex++;
+		if(imageIndex >= len){
+			imageIndex = 0;
+		}
+	}, 300);
 }
 
+var autoPlayInterval = null;
+
 function play(){
+	// Останавливаем предварительный показ при первом клике
 	if(t == 0){
-		myImage.setAttribute("src", "");
-		myTxt.innerHTML = "";
+		if(showImageInterval){
+			clearInterval(showImageInterval);
+			showImageInterval = null;
+		}
 		imageIndex = 0;
-		clearInterval(showImageInterval);
+		
+		// При первом клике показываем изображения и скрываем текст приветствия
+		flag = 0;
+		document.getElementById("typeDiv").style.opacity = 0; // Скрываем текст "Привет, Рохьим..."
+		document.getElementById("imgTxt").style.opacity = 1;
+		
+		// Показываем первое изображение
+		myImage.setAttribute("src", imageArray[0]);
+		myTxt.innerHTML = txtArray[0] || "";
+		myImage.style.opacity = '1';
+		imageIndex = 1; // Готовимся к следующему изображению
+	} else {
+		// При последующих кликах просто переключаем изображение (не меняем видимость контейнеров)
+		// Переключаем на следующую фотографию
+		showImage();
 	}
-	flag = 1 - flag;
-	document.getElementById("typeDiv").style.opacity = flag;
-	document.getElementById("imgTxt").style.opacity = 1 - flag;
-	if(t == 0){
-		//setTimeout(showImage, 1000);
-		setInterval(showImage, 2500);
-	}
+	
 	t++;
 }
 
 function preshowImage(){
-	document.getElementById("imgTxt").style.opacity = 0;
-	myImage.setAttribute("src", imageArray[imageIndex]);
-	myTxt.innerHTML = txtArray[imageIndex];
-	imageIndex++;
+	// Функция для предварительного показа изображений при загрузке
+	// Не изменяет imageIndex, чтобы не мешать основному переключению
 	if(imageIndex >= len){
 		imageIndex = 0;
 	}
+	document.getElementById("imgTxt").style.opacity = 0;
+	myImage.setAttribute("src", imageArray[imageIndex]);
+	myTxt.innerHTML = txtArray[imageIndex] || "";
+	// ВАЖНО: Не изменяем imageIndex здесь, так как это мешает основному переключению
 }
 
 function buttonFadeIn(){
